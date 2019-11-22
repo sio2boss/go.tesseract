@@ -8,14 +8,15 @@ import "C"
 import (
 	"bytes"
 	"errors"
+	leptonica "github.com/sio2boss/go.tesseract/pkg/leptonica"
 	"io"
+	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
 	"unicode/utf8"
 	"unsafe"
-
-	"gopkg.in/GeertJohan/go.leptonica.v1"
 )
 
 const version = "1.0"
@@ -33,6 +34,20 @@ type Tess struct {
 func Version() string {
 	libTessVersion := C.TessVersion()
 	return "go.tesseract:" + version + " tesseract lib:" + C.GoString(libTessVersion)
+}
+
+// NewTess creates and returns a new tesseract instance.
+func New(language string) (*Tess, error) {
+
+	// Get prefix
+	tessdata_prefix := os.Getenv("TESSDATA_PREFIX")
+	if tessdata_prefix == "" {
+		tessdata_prefix = "/usr/local/share"
+	}
+
+	// Load language
+	t, err := NewTess(filepath.Join(tessdata_prefix, "tessdata"), language)
+	return t, err
 }
 
 // TessBaseAPI* TessBaseAPICreate();

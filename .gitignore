@@ -1,2 +1,4 @@
 *sublime*
-/tessexample/tessexample
+.vs/
+.idea/
+/cmd/go-tesseract/go-tesseract
